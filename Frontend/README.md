@@ -4,7 +4,7 @@ This folder contains the frontend code for the chat app, built using **ReactJS**
 
 ## ⚙️ Tech Stack
 
-- ReactJS (Vite setup)
+- ReactJS
 - TailwindCSS
 - Zustand (for state management)
 - Socket.IO-client
