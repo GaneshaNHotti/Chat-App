@@ -1,37 +1,24 @@
 # app/controllers/auth_controller.py
-import os
 import bcrypt
-import jwt
 from fastapi import Request, Response, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.db import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin, UserUpdate, UserResponse
+from app.utils.utils import generate_token
 import cloudinary.uploader
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
-JWT_SECRET = os.getenv("JWT_SECRET")
-JWT_EXPIRY = 60 * 60 * 24 * 7  # 7 days
-
-# Add validation for JWT_SECRET
-if not JWT_SECRET:
-    raise ValueError("JWT_SECRET environment variable is not set")
-
-def generate_token(user_id: str, response: Response):
-    token = jwt.encode({"userId": user_id}, JWT_SECRET, algorithm="HS256")
-    response.set_cookie(key="jwt", value=token, httponly=True, max_age=JWT_EXPIRY)
 
 async def signup(request: Request, response: Response, db: AsyncSession = Depends(get_db)):
     data = await request.json()
-    user_data = UserCreate(**data)
 
-    if len(user_data.password) < 6:
+    if not (data['fullName'] and data['email'] and data['password']):
+        raise HTTPException(status_code=400, detail="All fields are required")
+    if len(data['password']) < 6:
         raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
 
+    user_data = UserCreate(**data) # Need to handle the @ case scenario
     # Check if user exists
     result = await db.execute(select(User).where(User.email == user_data.email))
     existing_user = result.scalar_one_or_none()

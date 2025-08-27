@@ -11,8 +11,8 @@ from app.core.socket import sio_app
 
 load_dotenv()
 
-PORT = int(os.getenv("PORT", 8000))
-ENV = os.getenv("NODE_ENV", "development")
+PORT = int(os.getenv("PORT"))
+ENV = os.getenv("NODE_ENV")
 
 # Create FastAPI instance
 app = FastAPI()
