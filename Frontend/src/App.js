@@ -1,7 +1,30 @@
-export default function App() {
+import { Switch, Route } from "wouter";
+import { queryClient } from "./lib/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { useAuth } from "./cpmponents/hooks/useAuth";
+import LoginForm from "./components/login-form";
+import NotFound from "./components/not-found";
+
+function Router() {
+  const { isAuthenticated, isLoading } = useAuth();
+
   return (
-    <div className="flex items-center justify-center h-screen bg-black">
-      <h1 className="text-4xl font-bold text-white">Hello World!!!</h1>
-    </div>
-  )
+    <Switch>
+      {isLoading || !isAuthenticated ? (
+        <Route path="/" component={LoginForm} />
+      ) : (
+        <Route component={NotFound} />
+      )}
+    </Switch>
+  );
 }
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+        <Router />
+    </QueryClientProvider>
+  );
+}
+
+export default App;
