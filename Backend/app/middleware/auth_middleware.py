@@ -1,11 +1,10 @@
 # app/middleware/auth_middleware.py
 import os
 import jwt
-from fastapi import Request, HTTPException, Depends
+from fastapi import Request, HTTPException
 from functools import wraps
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from app.db import get_db
 from app.models.user import User
 from dotenv import load_dotenv
 
@@ -55,7 +54,8 @@ def protect_route(handler):
                         "id": user.id,
                         "full_name": user.full_name,
                         "email": user.email,
-                        "profile_pic": user.profile_pic
+                        "profile_pic": user.profile_pic,
+                        "created_at": user.created_at
                     }
             else:
                 result = await db.execute(
@@ -70,7 +70,8 @@ def protect_route(handler):
                     "id": user.id,
                     "full_name": user.full_name,
                     "email": user.email,
-                    "profile_pic": user.profile_pic
+                    "profile_pic": user.profile_pic,
+                    "created_at": user.created_at
                 }
 
         except jwt.ExpiredSignatureError:
