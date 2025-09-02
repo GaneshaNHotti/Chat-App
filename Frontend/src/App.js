@@ -44,5 +44,3 @@ export default function App() {
     </div>
   )
 }
-
-//Start from 1 Hour 42 Minutes
