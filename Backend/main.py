@@ -18,7 +18,7 @@ ENV = os.getenv("NODE_ENV")
 app = FastAPI()
 
 # Attach Socket.IO server to FastAPI
-app.mount("/ws", sio_app)
+app.mount("/socket.io", sio_app)
 
 # CORS
 app.add_middleware(

@@ -4,7 +4,7 @@ import socketio
 
 # Create the Socket.IO server first
 sio = socketio.AsyncServer(
-    cors_allowed_origins=["http://localhost:5173"],
+    cors_allowed_origins=["http://localhost:3000"],
     async_mode="asgi"
 )
 
