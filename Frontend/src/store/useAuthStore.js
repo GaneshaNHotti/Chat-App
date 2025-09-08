@@ -83,7 +83,7 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  connectSocket: () => {
+  connectSocket: () => { // START HERE from 3:53
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
     const socket = io(BASE_URL, {
