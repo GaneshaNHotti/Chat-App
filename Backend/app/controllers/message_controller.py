@@ -10,6 +10,7 @@ from app.schemas.user import UserResponse
 import cloudinary.uploader
 from app.core.socket import get_receiver_socket_id, sio
 from typing import List
+from fastapi.encoders import jsonable_encoder
 
 async def get_users_for_sidebar(request: Request, db: AsyncSession = Depends(get_db)) -> List[UserResponse]:
     logged_in_user_id = request.state.user["id"]
@@ -86,6 +87,11 @@ async def send_message(request: Request, id: str, db: AsyncSession = Depends(get
     # Send to receiver via socket
     receiver_socket_id = get_receiver_socket_id(id)
     if receiver_socket_id:
-        await sio.emit("newMessage", message_response.dict(), to=receiver_socket_id)
+        # inside send_message
+        await sio.emit(
+            "newMessage",
+            jsonable_encoder(message_response),
+            to=receiver_socket_id
+        )
 
     return message_response
